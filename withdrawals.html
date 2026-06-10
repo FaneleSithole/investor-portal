@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Withdrawals — Capital Flow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">
+      <div class="brand-icon">CF</div>
+      <div>
+        <div class="brand-name">Capital Flow</div>
+        <div class="brand-sub" id="firm-name">Fanele &amp; Partners</div>
+      </div>
+    </div>
+    <button class="btn-new-investment" onclick="openNewInvestment()">+ New Investment</button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="index.html" class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+      Portfolio
+    </a>
+    <a href="withdrawals.html" class="nav-item active">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      Withdrawals
+    </a>
+    <a href="compliance.html" class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Compliance
+    </a>
+    <a href="reports.html" class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Reports
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+      Settings
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Support
+    </button>
+  </div>
+</aside>
+
+<header class="topbar">
+  <div class="topbar-icon" title="Notifications">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+  </div>
+  <div class="topbar-divider"></div>
+  <a href="profile.html" class="topbar-profile" title="View profile">
+    <div class="topbar-avatar" id="avatar-initials">—</div>
+    <div class="topbar-profile-info">
+      <span class="topbar-profile-name" id="topbar-name">—</span>
+      <span class="topbar-profile-role" id="topbar-role">Institutional Investor</span>
+    </div>
+  </a>
+</header>
+
+<main class="main">
+  <div class="page-content">
+    <div class="page-header">
+      <h1>Withdrawal Request</h1>
+      <p>Submit and track fund distributions from your available capital.</p>
+    </div>
+
+    <div class="withdrawal-grid">
+      <div>
+        <div class="balance-card">
+          <div class="balance-label">Available Balance</div>
+          <div class="balance-amount" id="available-balance">
+            <span id="balance-main">—</span><span class="cents" id="balance-cents">.00</span>
+          </div>
+          <div class="balance-growth" id="balance-growth">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            <span id="balance-growth-text">—</span>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="form-section">
+            <h3>New Request</h3>
+            <p class="form-hint" id="wd-max-hint">Maximum withdrawal (90% of balance): —</p>
+            <p class="form-hint" id="retirement-notice">Checking retirement eligibility…</p>
+            <div class="form-group">
+              <label class="form-label">Withdrawal Type</label>
+              <select class="form-control" id="wd-type">
+                <option value="STANDARD">Standard Distribution</option>
+                <option value="RETIREMENT">Retirement Withdrawal</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Amount</label>
+              <div class="input-prefix">
+                <span>R</span>
+                <input type="number" class="form-control" id="wd-amount" placeholder="0.00" min="0" step="0.01" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Destination Account</label>
+              <select class="form-control" id="wd-account">
+                <option value="">Select account…</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Reason (Optional)</label>
+              <textarea class="form-control" id="wd-reason" placeholder="e.g., Q3 Capital Distribution"></textarea>
+            </div>
+            <p class="form-error" id="wd-form-error" style="display:none"></p>
+            <button class="btn-primary" id="wd-submit-btn" onclick="submitWithdrawal()">Submit Request</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-pad">
+        <div class="tx-header">
+          <h3>Transaction History</h3>
+          <button class="btn-download-csv" onclick="exportStatementsCsv()" title="Export filtered statements as CSV">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+        </div>
+        <div class="csv-filter-bar">
+          <select class="filter-select" id="csv-filter-status">
+            <option value="">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Completed">Completed</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+          <select class="filter-select" id="csv-filter-type">
+            <option value="">All Types</option>
+            <option value="STANDARD">Standard</option>
+            <option value="RETIREMENT">Retirement</option>
+          </select>
+          <input type="date" class="filter-select" id="csv-filter-from" title="From date" />
+          <input type="date" class="filter-select" id="csv-filter-to" title="To date" />
+        </div>
+        <table class="tx-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Type</th>
+              <th>Destination</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tx-history-body">
+            <tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/validation.js"></script>
+<script src="js/common.js"></script>
+<script src="js/withdrawals.js"></script>
+</body>
+</html>

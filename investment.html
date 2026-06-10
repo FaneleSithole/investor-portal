@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Investment — Capital Flow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/investment.css" />
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">
+      <div class="brand-icon">CF</div>
+      <div>
+        <div class="brand-name">Capital Flow</div>
+        <div class="brand-sub" id="firm-name">Fanele &amp; Partners</div>
+      </div>
+    </div>
+    <button class="btn-new-investment" onclick="openNewInvestment()">+ New Investment</button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="index.html" class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+      Portfolio
+    </a>
+    <a href="withdrawals.html" class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      Withdrawals
+    </a>
+    <a href="compliance.html" class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Compliance
+    </a>
+    <a href="reports.html" class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Reports
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="profile.html" class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Settings
+    </a>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Support
+    </button>
+  </div>
+</aside>
+
+<header class="topbar">
+  <div class="topbar-icon" title="Notifications">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+  </div>
+  <div class="topbar-divider"></div>
+  <a href="profile.html" class="topbar-profile" title="View profile">
+    <div class="topbar-avatar" id="avatar-initials">—</div>
+    <div class="topbar-profile-info">
+      <span class="topbar-profile-name" id="topbar-name">—</span>
+      <span class="topbar-profile-role" id="topbar-role">Institutional Investor</span>
+    </div>
+  </a>
+</header>
+
+<main class="main">
+  <div class="investment-content">
+    <div class="page-header">
+      <h1>New Investment Commitment</h1>
+      <p>Complete the steps below to submit a new capital commitment to an available fund.</p>
+    </div>
+
+    <div class="commitment-banner">
+      <div>
+        <div class="commitment-banner-left">Current Commitment</div>
+        <div class="commitment-banner-amount" id="commitment-amount-display">R 0.00</div>
+      </div>
+      <div class="commitment-banner-right" id="fund-detail-hint">Select a fund to view details</div>
+    </div>
+
+    <!-- Step 1: Fund Selection -->
+    <section class="investment-section">
+      <div class="investment-section-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <h2>Fund Selection</h2>
+      </div>
+      <div class="fund-grid" id="fund-grid">
+        <div class="empty"><p>Loading available funds…</p></div>
+      </div>
+    </section>
+
+    <!-- Step 2: Investment Details -->
+    <section class="investment-section">
+      <div class="investment-section-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        <h2>Investment Details</h2>
+      </div>
+      <div class="investment-details-grid">
+        <div class="investment-field">
+          <label for="inv-amount">Commitment Amount (ZAR)</label>
+          <div class="input-prefix">
+            <span>R</span>
+            <input type="number" class="form-control" id="inv-amount" placeholder="0.00" min="0" step="0.01" />
+          </div>
+          <p class="investment-field-hint" id="commitment-hint">Min. commitment: R 4 500 000</p>
+        </div>
+        <div class="investment-field">
+          <label for="inv-account">Funding Source</label>
+          <select class="form-control" id="inv-account">
+            <option value="">Select Bank Account</option>
+          </select>
+        </div>
+        <div class="investment-field">
+          <label for="inv-date">Intended Funding Date</label>
+          <input type="date" class="form-control" id="inv-date" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 3: Regulatory & Legal -->
+    <section class="investment-section">
+      <div class="investment-section-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 4v5c0 5-3.5 9-7 10-3.5-1-7-5-7-10V7l7-4z"/></svg>
+        <h2>Regulatory &amp; Legal</h2>
+      </div>
+
+      <label class="legal-check">
+        <input type="checkbox" id="chk-accredited" />
+        <span class="legal-check-text">
+          <strong>Accredited Investor Confirmation</strong><br />
+          I certify that I qualify as an accredited investor under applicable securities regulations and meet the income or net-worth thresholds required for this private placement.
+        </span>
+      </label>
+
+      <label class="legal-check">
+        <input type="checkbox" id="chk-terms" />
+        <span class="legal-check-text">
+          <strong>Terms and Conditions</strong><br />
+          I have read and agree to the Limited Partnership Agreement (LPA) and Private Placement Memorandum (PPM) governing this investment commitment.
+        </span>
+      </label>
+
+      <div class="signature-box">
+        <div class="signature-box-header">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+          Digital Signature
+        </div>
+        <p>Please type your full legal name below to confirm identity.</p>
+        <input type="text" class="form-control" id="signature-name" placeholder="Type full name" />
+      </div>
+    </section>
+
+    <p class="investment-error" id="inv-error"></p>
+
+    <div class="investment-footer">
+      <button type="button" class="btn-cancel-inv" onclick="window.location.href='index.html'">Cancel</button>
+      <button type="button" class="btn-submit-inv" id="btn-submit-inv" onclick="submitInvestment()">
+        Review &amp; Submit
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/validation.js"></script>
+<script src="js/common.js"></script>
+<script src="js/investment.js"></script>
+</body>
+</html>

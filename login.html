@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Capital Flow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body>
+
+  <div class="auth-layout">
+    <section class="auth-hero">
+      <h1>Secure Access to Your Capital.</h1>
+      <p>Transparent portfolio management, streamlined withdrawals and institutional-grade compliance for modern investors.</p>
+    </section>
+
+    <section class="auth-panel">
+      <div class="auth-card">
+        <h2 id="auth-title">Institutional Login</h2>
+        <p class="auth-error" id="auth-error"></p>
+
+        <form id="auth-form" novalidate>
+          <div class="signup-fields" id="signup-fields">
+            <div class="auth-form-row">
+              <div class="auth-form-group">
+                <label for="first-name">First Name</label>
+                <input type="text" class="auth-input" id="first-name" placeholder="Name" />
+              </div>
+              <div class="auth-form-group">
+                <label for="last-name">Last Name</label>
+                <input type="text" class="auth-input" id="last-name" placeholder="Surname" />
+              </div>
+            </div>
+            <div class="auth-form-group">
+              <label for="firm-name">Firm Name (Optional)</label>
+              <input type="text" class="auth-input" id="firm-name" placeholder="Fanele &amp; Partners" />
+            </div>
+            <div class="auth-form-group">
+              <label for="date-of-birth">Date of Birth</label>
+              <input type="date" class="auth-input" id="date-of-birth" />
+            </div>
+          </div>
+
+          <div class="auth-form-group">
+            <label for="email">Email</label>
+            <input type="email" class="auth-input" id="email" placeholder="name@firm.com" required autocomplete="email" />
+          </div>
+
+          <div class="auth-form-group login-only" id="forgot-row">
+            <div class="forgot-row">
+              <a href="#" class="forgot-link" onclick="showToast('Password reset coming soon', false); return false;">Forgot Password?</a>
+            </div>
+          </div>
+
+          <div class="auth-form-group">
+            <label for="password">Password</label>
+            <div class="auth-input-wrap">
+              <input type="password" class="auth-input" id="password" placeholder="••••••••" required autocomplete="current-password" />
+              <button type="button" class="password-toggle" id="password-toggle" aria-label="Toggle password visibility">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-access" id="auth-submit">Access Portal</button>
+        </form>
+
+        <p class="auth-switch" id="auth-switch">
+          New to Capital Flow? <a href="#" id="toggle-mode">Sign Up</a>
+        </p>
+      </div>
+
+      <p class="auth-footer">&copy; 2026 Capital Flow Fanele &amp; Partners. All rights reserved.</p>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" style="position:fixed;bottom:28px;right:28px;background:#111;color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;opacity:0;transition:opacity .3s;z-index:999;"></div>
+
+  <script src="js/validation.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+.investment-content { padding: 28px 32px 48px; max-width: 1100px; }
+
+.commitment-banner {
+  background: #0f1b2d;
+  border-radius: var(--radius);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.commitment-banner-left {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.commitment-banner-amount {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--white);
+  margin-top: 4px;
+}
+
+.commitment-banner-right {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.65);
+  text-align: right;
+}
+
+.investment-section {
+  margin-bottom: 32px;
+}
+
+.investment-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.investment-section-header h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.investment-section-header svg { color: var(--muted); flex-shrink: 0; }
+
+.fund-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.fund-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 18px 16px;
+  cursor: pointer;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+  text-align: left;
+}
+
+.fund-card:hover {
+  border-color: #b8c0cc;
+  box-shadow: var(--shadow);
+}
+
+.fund-card.selected {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.fund-card-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.fund-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+
+.fund-card-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.fund-card-explore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-style: dashed;
+  min-height: 120px;
+  color: var(--muted);
+}
+
+.fund-card-explore svg { margin-bottom: 8px; opacity: .5; }
+
+.investment-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.investment-field label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.investment-field .form-control { width: 100%; }
+
+.investment-field-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.legal-check {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.legal-check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--green);
+}
+
+.legal-check-text {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.legal-check-text strong { font-weight: 600; }
+
+.signature-box {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-top: 16px;
+}
+
+.signature-box-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.signature-box p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.investment-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.btn-cancel-inv {
+  padding: 12px 24px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.btn-cancel-inv:hover { border-color: var(--text); }
+
+.btn-submit-inv {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .18s;
+}
+
+.btn-submit-inv:hover { background: var(--green-mid); }
+.btn-submit-inv:disabled { background: #999; cursor: not-allowed; }
+
+.investment-error {
+  font-size: 13px;
+  color: var(--red);
+  margin-top: 12px;
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .fund-grid { grid-template-columns: 1fr 1fr; }
+  .investment-details-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .fund-grid { grid-template-columns: 1fr; }
+}
