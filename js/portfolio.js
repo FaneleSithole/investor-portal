@@ -55,6 +55,10 @@ async function loadPortfolio() {
       </div>
     </div>`;
   }).join('') || '<div class="empty"><p>No recent activity</p></div>';
+
+  if (typeof uiAnimateFadeIn === 'function') {
+    uiAnimateFadeIn(actEl.querySelectorAll('.activity-item, .empty'));
+  }
 }
 
 function renderBarChart(data) {
@@ -93,6 +97,10 @@ function renderDonut(allocs) {
       <span>${a.label}</span>
       <span class="alloc-pct">${a.percent}%</span>
     </div>`).join('');
+
+  if (typeof uiAnimateFadeIn === 'function') {
+    uiAnimateFadeIn(legend.querySelectorAll('.alloc-item, .empty'));
+  }
 }
 
 function setTimeRange(range, btn) {

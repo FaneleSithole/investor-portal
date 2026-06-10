@@ -77,6 +77,10 @@ function renderFunds(funds) {
       <div class="fund-card-title">Explore more funds</div>
       <div class="fund-card-desc">Browse the full institutional catalogue</div>
     </button>`;
+
+  if (typeof uiAnimateFadeIn === 'function') {
+    uiAnimateFadeIn(grid.querySelectorAll('.fund-card'));
+  }
 }
 
 async function selectFund(fundId, el) {

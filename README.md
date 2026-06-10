@@ -53,10 +53,7 @@ java -version
 
 ```text
 Project_03/
-├── index.html          # Portfolio (main app)
-├── landing.html        # Public landing page
-├── login.html          # Auth
-├── investment.html     # New commitment flow
+├── pages/              # HTML pages (index, landing, login, etc.)
 ├── css/  js/           # Frontend assets
 ├── docs/screenshots/   # README screenshots
 └── backend/            # Spring Boot API
@@ -86,8 +83,8 @@ First startup may take 30–60 seconds while Maven downloads dependencies.
 | URL | Page |
 |-----|------|
 | http://localhost:8080/ | Landing (redirect) |
-| http://localhost:8080/login.html | Login / sign up |
-| http://localhost:8080/index.html | Portfolio (requires login) |
+| http://localhost:8080/pages/login.html | Login / sign up |
+| http://localhost:8080/pages/index.html | Portfolio (requires login) |
 
 > **Important:** Open pages through `http://localhost:8080`, not as `file://` URLs. Session cookies and API calls require the backend origin.
 
@@ -345,7 +342,7 @@ Extend js/validation.js and the corresponding DTO constraints for field Y.
 
 Screenshots in `docs/screenshots/` are illustrative mockups. For accurate docs, capture live UI after starting the server:
 
-1. Log in at http://localhost:8080/login.html  
+1. Log in at http://localhost:8080/pages/login.html  
 2. Screenshot each page (Portfolio, Withdrawals, Investment, Profile)  
 3. Save over the files in `docs/screenshots/`
 

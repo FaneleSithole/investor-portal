@@ -1,6 +1,6 @@
 # Capital Flow — Spring Boot API Contract
 
-This document defines all REST endpoints the `index.html` frontend calls via `fetch('/api/...')`.
+This document defines all REST endpoints the `pages/index.html` frontend calls via `fetch('/api/...')`.
 Configure your Spring Boot `@RestController` classes to match these signatures.
 
 ---

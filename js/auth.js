@@ -84,7 +84,7 @@ async function handleSubmit(e) {
       showToast('Account created — welcome to Capital Flow');
       setTimeout(() => { window.location.href = 'index.html'; }, 600);
     } catch (err) {
-      const msg = err.message || 'Unable to reach the server. Start the backend on port 8080 and open http://localhost:8080/login.html';
+      const msg = err.message || 'Unable to reach the server. Start the backend on port 8080 and open http://localhost:8080/pages/login.html';
       applyApiError('auth', err, 'auth-error');
       showAuthError(msg);
       showToast(msg, false);
@@ -111,7 +111,7 @@ async function handleSubmit(e) {
     showToast('Login successful');
     setTimeout(() => { window.location.href = 'index.html'; }, 600);
   } catch (err) {
-    const msg = err.message || 'Unable to reach the server. Start the backend on port 8080 and open http://localhost:8080/login.html';
+    const msg = err.message || 'Unable to reach the server. Start the backend on port 8080 and open http://localhost:8080/pages/login.html';
     applyApiError('auth', err, 'auth-error');
     showAuthError(msg);
     showToast(msg, false);

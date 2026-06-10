@@ -104,6 +104,7 @@ async function downloadFile(path, filename) {
 function showToast(msg, success = true) {
   const t = document.getElementById('toast');
   if (!t) return;
+  t.classList.remove('show');
   t.textContent = msg;
   t.className = 'toast' + (success ? ' success' : '');
   requestAnimationFrame(() => { t.classList.add('show'); });
@@ -114,7 +115,11 @@ function showFormError(elId, msg) {
   const el = document.getElementById(elId);
   if (!el) return;
   el.textContent = msg || '';
-  el.style.display = msg ? 'block' : 'none';
+  if (typeof uiSetVisible === 'function') {
+    uiSetVisible(el, !!msg, 'block');
+  } else {
+    el.style.display = msg ? 'block' : 'none';
+  }
 }
 
 function openNewInvestment() {

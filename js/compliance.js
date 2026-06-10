@@ -14,8 +14,14 @@ async function loadCompliance() {
 
   const banner = document.getElementById('breach-banner');
   if (data.activeBreach) {
-    banner.style.display = 'block';
     document.getElementById('breach-msg').textContent = data.breachMessage ?? 'A compliance breach has been detected.';
+    if (typeof uiSetVisible === 'function') {
+      uiSetVisible(banner, true, 'block');
+    } else {
+      banner.style.display = 'block';
+    }
+  } else if (typeof uiSetVisible === 'function') {
+    uiSetVisible(banner, false);
   } else {
     banner.style.display = 'none';
   }

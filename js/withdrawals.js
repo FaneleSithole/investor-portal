@@ -87,6 +87,10 @@ function renderHistory(history) {
   } else {
     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--muted)">No transactions found</td></tr>';
   }
+
+  if (typeof uiAnimateFadeIn === 'function') {
+    uiAnimateFadeIn(tbody.querySelectorAll('tr'));
+  }
 }
 
 async function submitWithdrawal() {

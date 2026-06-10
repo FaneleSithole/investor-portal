@@ -42,6 +42,9 @@ function renderReports(reports) {
 
   if (!reports.length) {
     container.innerHTML = '<div class="empty" style="grid-column:1/-1"><p>No documents found</p></div>';
+    if (typeof uiAnimateFadeIn === 'function') {
+      uiAnimateFadeIn(container.querySelectorAll('.empty'));
+    }
     return;
   }
 
@@ -74,6 +77,10 @@ function renderReports(reports) {
       </div>
     </div>`;
   }).join('');
+
+  if (typeof uiAnimateFadeIn === 'function') {
+    uiAnimateFadeIn(container.querySelectorAll('.report-card'));
+  }
 }
 
 function setView(view) {
