@@ -26,7 +26,7 @@ Currency is displayed in **South African Rand (ZAR)** throughout the UI.
 | Layer | Technology |
 |-------|------------|
 | Frontend | HTML5, CSS3, vanilla JavaScript |
-| Backend | Java 17, Spring Boot 3.2.5 |
+| Backend | Java 26 (JDK 26.0.1), Spring Boot 4.0.6 |
 | Persistence | H2 (file-backed), Spring Data JPA |
 | Security | Spring Security, BCrypt, HTTP session (`JSESSIONID`) |
 | Validation | Jakarta Bean Validation (backend), `js/validation.js` (frontend) |
@@ -35,7 +35,7 @@ Currency is displayed in **South African Rand (ZAR)** throughout the UI.
 
 ## Prerequisites
 
-- **Java 17** (JDK 17+)
+- **Java 26** (JDK 26.0.1)
 - **Maven** (included via `backend/mvnw.cmd`)
 - A terminal (PowerShell on Windows)
 
@@ -67,7 +67,7 @@ Project_03/
 Adjust the path if your JDK is installed elsewhere:
 
 ```powershell
-$env:JAVA_HOME = "C:\Program Files\Java\jdk-17.0"
+$env:JAVA_HOME = "C:\Program Files\Java\jdk-26.0.1"
 ```
 
 ### 3. Start the backend
@@ -113,7 +113,7 @@ This user is seeded on first run (`DataSeeder.java`) and is eligible for retirem
 | Port 8080 in use | Stop the other process or change `server.port` in `backend/src/main/resources/application.properties` |
 | Maven build fails / DB locked | Kill stale Java processes; H2 uses `AUTO_SERVER=TRUE` for recovery |
 | API returns 401 | Log in again; protected routes require an active session |
-| `JAVA_HOME` errors | Point `$env:JAVA_HOME` at your JDK 17 install |
+| `JAVA_HOME` errors | Point `$env:JAVA_HOME` at your JDK 26.0.1 install |
 | Login 500 / `NOTIFY_COMPLIANCE` not found | Stop the server, delete `backend/data/capitalflow.*.db` files, restart (schema migrations will re-run) |
 | Prefer `mvnw spring-boot:run` over `java -jar` | Fat-jar mode can hit classpath issues after force-killing the process |
 
@@ -122,7 +122,7 @@ This user is seeded on first run (`DataSeeder.java`) and is eligible for retirem
 ## Project structure (backend)
 
 ```text
-backend/src/main/java/com/fanele/capitalflow/
+backend/src/main/java/com/enviro/assessment/junior/fanelesibongesithole/
 ├── catalog/          # FundCatalog — single source of truth for investable funds
 ├── config/           # Security, seeding, schema migration
 ├── controller/       # REST endpoints
