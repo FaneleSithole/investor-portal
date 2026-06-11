@@ -1,6 +1,8 @@
 # Capital Flow
 
-Institutional investor portal for **Fanele & Partners** — portfolio analytics, withdrawals, compliance monitoring, reports, and new investment commitments. The frontend is static HTML/CSS/JS; the backend is a Spring Boot REST API with session-based authentication.
+Investor portal for the **eTalente Junior Developer Assessment 2026** — built for the **Enviro365 Investments** scenario (automated withdrawal notices, portfolio view, CSV export). The frontend is static HTML/CSS/JS; the backend is a Spring Boot REST API with session-based authentication.
+
+**Base package:** `com.enviro.assessment.junior.fanelesibongesithole`
 
 ![Portfolio dashboard](docs/screenshots/portfolio-dashboard.png)
 
@@ -27,7 +29,7 @@ Currency is displayed in **South African Rand (ZAR)** throughout the UI.
 |-------|------------|
 | Frontend | HTML5, CSS3, vanilla JavaScript |
 | Backend | Java 26 (JDK 26.0.1), Spring Boot 4.0.6 |
-| Persistence | H2 (file-backed), Spring Data JPA |
+| Persistence | H2 (in-memory), Spring Data JPA |
 | Security | Spring Security, BCrypt, HTTP session (`JSESSIONID`) |
 | Validation | Jakarta Bean Validation (backend), `js/validation.js` (frontend) |
 
@@ -69,7 +71,7 @@ $env:JAVA_HOME = "C:\Program Files\Java\jdk-26.0.1"
 
 ### 3. Start the backend
 
-The backend serves **both** the API and the static frontend on port **8081**.
+The backend serves **both** the API and the static frontend on port **8080**.
 
 ```powershell
 cd backend
@@ -100,7 +102,7 @@ This user is seeded on first run (`DataSeeder.java`) and is eligible for retirem
 ### H2 console (optional)
 
 - URL: http://localhost:8080/h2-console  
-- JDBC URL: `jdbc:h2:file:./data/capitalflow`  
+- JDBC URL: `jdbc:h2:mem:capitalflow`  
 - User: `sa` / Password: *(empty)*
 
 ### Troubleshooting
@@ -108,10 +110,9 @@ This user is seeded on first run (`DataSeeder.java`) and is eligible for retirem
 | Issue | Fix |
 |-------|-----|
 | Port 8080 in use | Stop the other process or change `server.port` in `backend/src/main/resources/application.properties` |
-| Maven build fails / DB locked | Kill stale Java processes; H2 uses `AUTO_SERVER=TRUE` for recovery |
+| Maven build fails | Kill stale Java processes holding the port, then restart |
 | API returns 401 | Log in again; protected routes require an active session |
 | `JAVA_HOME` errors | Point `$env:JAVA_HOME` at your JDK 26.0.1 install |
-| Login 500 / `NOTIFY_COMPLIANCE` not found | Stop the server, delete `backend/data/capitalflow.*.db` files, restart (schema migrations will re-run) |
 | Prefer `mvnw spring-boot:run` over `java -jar` | Fat-jar mode can hit classpath issues after force-killing the process |
 
 ---
@@ -199,7 +200,7 @@ Portfolio holdings use the same fund IDs as the investment catalogue (`fund_pe`,
 |--------|------|-------------|
 | `GET` | `/withdrawals/balance` | Available balance, 90% cap, retirement eligibility |
 | `GET` | `/withdrawals/transactions` | Withdrawal history |
-| `POST` | `/withdrawals/request` | Submit withdrawal |
+| `POST` | `/withdrawals` | Submit withdrawal |
 | `GET` | `/withdrawals/statements/export` | CSV export (`?status=&type=&from=&to=`) |
 | `GET` | `/accounts/linked` | Linked bank accounts |
 
@@ -271,6 +272,32 @@ Portfolio holdings use the same fund IDs as the investment catalogue (`fund_pe`,
 | `GET` | `/reports` | Report catalogue |
 | `GET` | `/reports/{id}/download` | Single PDF download |
 | `GET` | `/reports/download-all` | ZIP of all reports |
+
+---
+
+## Assessment requirements (eTalente 2026)
+
+This submission maps to the **Junior Software Developer Assessment** rubric as follows:
+
+| Requirement | Implementation |
+|-------------|----------------|
+| **Retrieve investor portfolio** | `GET /api/portfolio/summary` — products, allocations, performance |
+| **Create withdrawal notices** | `POST /api/withdrawals` — balance calculation in `WithdrawalService` |
+| **Export CSV statements** | `GET /api/withdrawals/statements/export?status=&type=&from=&to=` |
+| **Portfolio dashboard (UI)** | `pages/index.html` + `js/portfolio.js` |
+| **Withdrawal form (UI)** | `pages/withdrawals.html` + `js/withdrawals.js` |
+| **Withdrawal history table (UI)** | Transaction history table on withdrawals page |
+| **CSV download button (UI)** | Export CSV with status/type/date filters |
+| **Age > 65 for retirement** | `BusinessRules.RETIREMENT_MIN_AGE` enforced in service + UI |
+| **Amount ≤ balance** | Validated in `WithdrawalService` and `js/validation.js` |
+| **Amount ≤ 90% of balance** | `BusinessRules.MAX_WITHDRAWAL_RATIO` in service + UI |
+| **Global exception handling** | `GlobalExceptionHandler` + `ApiException` |
+| **DTO layer** | `dto/` package — entities never exposed on the wire |
+| **Input validation** | Jakarta Bean Validation on DTOs |
+| **Unit tests** | `WithdrawalServiceTest`, `InvestmentServiceTest`, `DtoValidationTest` |
+| **UI validation** | `js/validation.js` mirrored with backend rules |
+| **H2 database** | `jdbc:h2:mem:capitalflow` in `application.properties` |
+| **REST best practices** | Resource-oriented paths, proper HTTP status codes, session auth |
 
 ---
 
