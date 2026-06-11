@@ -51,7 +51,7 @@ async function apiFetch(path) {
     return await r.json();
   } catch (e) {
     console.warn('API error:', path, e);
-    return { error: 'Unable to reach the server. Is the backend running on port 8080?' };
+    return { error: 'Unable to reach the server. Start the backend with .\\mvnw.cmd spring-boot:run in the backend folder.' };
   }
 }
 
