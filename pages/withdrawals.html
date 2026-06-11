@@ -105,7 +105,7 @@
               <label class="form-label">Amount</label>
               <div class="input-prefix">
                 <span>R</span>
-                <input type="number" class="form-control" id="wd-amount" placeholder="0.00" min="0" step="0.01" />
+                <input type="number" class="form-control" id="wd-amount" placeholder="0.00" min="0.01" step="0.01" inputmode="decimal" />
               </div>
             </div>
             <div class="form-group">
@@ -116,9 +116,9 @@
             </div>
             <div class="form-group">
               <label class="form-label">Reason (Optional)</label>
-              <textarea class="form-control" id="wd-reason" placeholder="e.g., Q3 Capital Distribution"></textarea>
+              <textarea class="form-control" id="wd-reason" placeholder="e.g., Q3 Capital Distribution" maxlength="500"></textarea>
             </div>
-            <p class="form-error" id="wd-form-error" style="display:none"></p>
+            <p class="form-error" id="wd-form-error" role="alert" aria-live="polite" style="display:none"></p>
             <button class="btn-primary" id="wd-submit-btn" onclick="submitWithdrawal()">Submit Request</button>
           </div>
         </div>
