@@ -107,7 +107,7 @@
           <label for="inv-amount">Commitment Amount (ZAR)</label>
           <div class="input-prefix">
             <span>R</span>
-            <input type="number" class="form-control" id="inv-amount" placeholder="0.00" min="0" step="0.01" />
+            <input type="number" class="form-control" id="inv-amount" placeholder="0.00" min="4500000" step="0.01" inputmode="decimal" />
           </div>
           <p class="investment-field-hint" id="commitment-hint">Min. commitment: R 4 500 000</p>
         </div>
@@ -153,11 +153,11 @@
           Digital Signature
         </div>
         <p>Please type your full legal name below to confirm identity.</p>
-        <input type="text" class="form-control" id="signature-name" placeholder="Type full name" />
+        <input type="text" class="form-control" id="signature-name" placeholder="Type full name" minlength="2" maxlength="120" autocomplete="name" />
       </div>
     </section>
 
-    <p class="investment-error" id="inv-error"></p>
+    <p class="investment-error" id="inv-error" role="alert" aria-live="polite"></p>
 
     <div class="investment-footer">
       <button type="button" class="btn-cancel-inv" onclick="window.location.href='index.html'">Cancel</button>
