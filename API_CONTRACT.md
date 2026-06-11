@@ -96,7 +96,7 @@ Returns the logged-in investor's profile.
 ]
 ```
 
-### POST `/api/withdrawals/request`
+### POST `/api/withdrawals`
 **Request body:**
 ```json
 {

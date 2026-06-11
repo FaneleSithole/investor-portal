@@ -116,7 +116,7 @@ async function submitWithdrawal() {
   btn.textContent = 'Submitting…';
 
   try {
-    const payload = await apiPost('/withdrawals/request', { amount, accountId: account, type, reason });
+    const payload = await apiPost('/withdrawals', { amount, accountId: account, type, reason });
     showToast(payload.message + ' (Ref: ' + payload.referenceId + ')');
     document.getElementById('wd-amount').value = '';
     document.getElementById('wd-reason').value = '';

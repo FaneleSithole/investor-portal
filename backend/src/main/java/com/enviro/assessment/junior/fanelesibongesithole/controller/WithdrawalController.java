@@ -41,8 +41,8 @@ public class WithdrawalController {
         return withdrawalService.getTransactions();
     }
 
-    @PostMapping("/request")
-    public WithdrawalResponseDto request(@Valid @RequestBody WithdrawalRequestDto body) {
+    @PostMapping
+    public WithdrawalResponseDto create(@Valid @RequestBody WithdrawalRequestDto body) {
         return withdrawalService.createWithdrawal(body);
     }
 
