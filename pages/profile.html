@@ -94,7 +94,7 @@
         <button class="btn-share" type="button" onclick="showToast('Profile link copied', true)">Share Profile</button>
         <button class="btn-save" type="button" id="btn-save-profile" onclick="saveProfile()">Save Changes</button>
       </div>
-      <p class="form-error" id="profile-form-error" style="display:none;margin-top:12px"></p>
+      <p class="form-error" id="profile-form-error" role="alert" aria-live="polite" style="display:none;margin-top:12px"></p>
     </div>
 
     <div class="profile-tabs">
@@ -115,19 +115,19 @@
             <div class="profile-form-grid">
               <div class="profile-field">
                 <label for="field-fullname">Full Name</label>
-                <input type="text" id="field-fullname" />
+                <input type="text" id="field-fullname" maxlength="161" autocomplete="name" />
               </div>
               <div class="profile-field">
                 <label for="field-email">Email Address</label>
-                <input type="email" id="field-email" readonly style="background:var(--bg);color:var(--muted)" />
+                <input type="email" id="field-email" readonly style="background:var(--bg);color:var(--muted)" autocomplete="email" />
               </div>
               <div class="profile-field">
                 <label for="field-phone">Phone Number</label>
-                <input type="tel" id="field-phone" placeholder="+1 (555) 000-0000" />
+                <input type="tel" id="field-phone" placeholder="+1 (555) 000-0000" maxlength="30" autocomplete="tel" />
               </div>
               <div class="profile-field">
                 <label for="field-firm">Primary Entity/Firm</label>
-                <input type="text" id="field-firm" />
+                <input type="text" id="field-firm" maxlength="120" autocomplete="organization" />
               </div>
             </div>
           </div>
@@ -135,7 +135,7 @@
             <h3 style="margin-bottom:14px">Professional Background</h3>
             <div class="profile-field full">
               <label for="field-bio">Investment Bio</label>
-              <textarea id="field-bio" placeholder="Describe your investment background…"></textarea>
+              <textarea id="field-bio" placeholder="Describe your investment background…" maxlength="2000"></textarea>
             </div>
           </div>
         </div>
