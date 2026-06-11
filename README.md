@@ -69,7 +69,7 @@ $env:JAVA_HOME = "C:\Program Files\Java\jdk-26.0.1"
 
 ### 3. Start the backend
 
-The backend serves **both** the API and the static frontend on port **8080**.
+The backend serves **both** the API and the static frontend on port **8081**.
 
 ```powershell
 cd backend
