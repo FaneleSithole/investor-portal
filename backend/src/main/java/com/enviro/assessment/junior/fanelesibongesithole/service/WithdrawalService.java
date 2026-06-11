@@ -1,5 +1,6 @@
 package com.enviro.assessment.junior.fanelesibongesithole.service;
 
+import com.enviro.assessment.junior.fanelesibongesithole.domain.BusinessRules;
 import com.enviro.assessment.junior.fanelesibongesithole.dto.BalanceDto;
 import com.enviro.assessment.junior.fanelesibongesithole.dto.TransactionDto;
 import com.enviro.assessment.junior.fanelesibongesithole.dto.WithdrawalRequestDto;
@@ -23,9 +24,6 @@ import java.util.stream.Stream;
 @Service
 public class WithdrawalService {
 
-    private static final int RETIREMENT_MIN_AGE = 65;
-    private static final BigDecimal MAX_WITHDRAWAL_RATIO = new BigDecimal("0.90");
-
     private final DataStore dataStore;
     private final CurrentUserService currentUserService;
 
@@ -36,9 +34,9 @@ public class WithdrawalService {
 
     public BalanceDto getBalance() {
         BigDecimal available = calculateAvailableBalance();
-        BigDecimal maxWithdrawal = available.multiply(MAX_WITHDRAWAL_RATIO)
+        BigDecimal maxWithdrawal = available.multiply(BusinessRules.MAX_WITHDRAWAL_RATIO)
                 .setScale(2, RoundingMode.HALF_UP);
-        boolean retirementEligible = currentUserService.requireCurrentUser().getAge() > RETIREMENT_MIN_AGE;
+        boolean retirementEligible = currentUserService.requireCurrentUser().getAge() > BusinessRules.RETIREMENT_MIN_AGE;
 
         return new BalanceDto(
                 available.doubleValue(),
@@ -119,7 +117,7 @@ public class WithdrawalService {
     private void validateWithdrawal(WithdrawalRequestDto request) {
         int age = currentUserService.requireCurrentUser().getAge();
 
-        if (request.type() == WithdrawalType.RETIREMENT && age <= RETIREMENT_MIN_AGE) {
+        if (request.type() == WithdrawalType.RETIREMENT && age <= BusinessRules.RETIREMENT_MIN_AGE) {
             throw new ApiException(
                     "Retirement withdrawals are only available for investors over age 65",
                     HttpStatus.UNPROCESSABLE_ENTITY);
@@ -127,7 +125,7 @@ public class WithdrawalService {
 
         BigDecimal available = calculateAvailableBalance();
         BigDecimal amount = request.amount().setScale(2, RoundingMode.HALF_UP);
-        BigDecimal maxAllowed = available.multiply(MAX_WITHDRAWAL_RATIO).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal maxAllowed = available.multiply(BusinessRules.MAX_WITHDRAWAL_RATIO).setScale(2, RoundingMode.HALF_UP);
 
         if (amount.compareTo(available) > 0) {
             throw new ApiException(

@@ -21,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
 
-    private static final int RETIREMENT_MIN_AGE = 65;
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -63,7 +61,7 @@ public class AuthService {
             );
             SecurityContextHolder.getContext().setAuthentication(auth);
             UserEntity user = ((UserPrincipal) auth.getPrincipal()).getUser();
-            return new AuthResponse("Login successful", toProfile(user));
+            return new AuthResponse("Login successful", UserProfileMapper.toSummary(user));
         } catch (BadCredentialsException e) {
             throw new ApiException("Invalid email or password", HttpStatus.UNAUTHORIZED);
         }
@@ -74,18 +72,6 @@ public class AuthService {
         if (auth == null || !(auth.getPrincipal() instanceof UserPrincipal principal)) {
             throw new ApiException("Authentication required", HttpStatus.UNAUTHORIZED);
         }
-        return toProfile(principal.getUser());
-    }
-
-    public UserProfileDto toProfile(UserEntity user) {
-        int age = user.getAge();
-        return new UserProfileDto(
-                user.getFirstName(),
-                user.getLastName(),
-                user.getFirmName() != null ? user.getFirmName() : "Fanele & Partners",
-                user.getRole(),
-                age,
-                age > RETIREMENT_MIN_AGE
-        );
+        return UserProfileMapper.toSummary(principal.getUser());
     }
 }

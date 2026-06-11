@@ -1,5 +1,6 @@
 package com.enviro.assessment.junior.fanelesibongesithole.service;
 
+import com.enviro.assessment.junior.fanelesibongesithole.domain.BusinessRules;
 import com.enviro.assessment.junior.fanelesibongesithole.dto.ProfileDetailDto;
 import com.enviro.assessment.junior.fanelesibongesithole.dto.ProfileUpdateRequest;
 import com.enviro.assessment.junior.fanelesibongesithole.dto.UserProfileDto;
@@ -13,22 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
-    private static final int RETIREMENT_MIN_AGE = 65;
-
-    private final AuthService authService;
     private final CurrentUserService currentUserService;
     private final UserRepository userRepository;
 
-    public UserService(AuthService authService,
-                       CurrentUserService currentUserService,
+    public UserService(CurrentUserService currentUserService,
                        UserRepository userRepository) {
-        this.authService = authService;
         this.currentUserService = currentUserService;
         this.userRepository = userRepository;
     }
 
     public UserProfileDto getProfile() {
-        return authService.currentUser();
+        return UserProfileMapper.toSummary(currentUserService.requireCurrentUser());
     }
 
     public ProfileDetailDto getProfileDetail() {
@@ -81,7 +77,7 @@ public class UserService {
                 user.getRole(),
                 user.getBio() != null ? user.getBio() : "",
                 age,
-                age > RETIREMENT_MIN_AGE,
+                age > BusinessRules.RETIREMENT_MIN_AGE,
                 user.isVerified(),
                 user.getJoinedYear(),
                 user.getSecurityProgress(),
