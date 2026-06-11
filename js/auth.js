@@ -40,6 +40,17 @@ function setMode(signup) {
     ? 'Already have an account? <a href="#" id="toggle-mode">Login</a>'
     : 'New to Capital Flow? <a href="#" id="toggle-mode">Sign Up</a>';
   document.getElementById('toggle-mode').addEventListener('click', toggleMode);
+  const passwordInput = document.getElementById('password');
+  if (signup) {
+    passwordInput.minLength = ValidationRules.MIN_PASSWORD;
+    passwordInput.autocomplete = 'new-password';
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    document.getElementById('date-of-birth').max = yesterday.toISOString().slice(0, 10);
+  } else {
+    passwordInput.removeAttribute('minlength');
+    passwordInput.autocomplete = 'current-password';
+  }
   clearFieldErrors(document.getElementById('auth-form'));
   showAuthError('');
 }

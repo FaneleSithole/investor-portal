@@ -21,33 +21,33 @@
     <section class="auth-panel">
       <div class="auth-card">
         <h2 id="auth-title">Institutional Login</h2>
-        <p class="auth-error" id="auth-error"></p>
+        <p class="auth-error" id="auth-error" role="alert" aria-live="polite"></p>
 
-        <form id="auth-form" novalidate>
+        <form id="auth-form" novalidate aria-describedby="auth-error">
           <div class="signup-fields" id="signup-fields">
             <div class="auth-form-row">
               <div class="auth-form-group">
                 <label for="first-name">First Name</label>
-                <input type="text" class="auth-input" id="first-name" placeholder="Name" />
+                <input type="text" class="auth-input" id="first-name" placeholder="Name" maxlength="80" autocomplete="given-name" />
               </div>
               <div class="auth-form-group">
                 <label for="last-name">Last Name</label>
-                <input type="text" class="auth-input" id="last-name" placeholder="Surname" />
+                <input type="text" class="auth-input" id="last-name" placeholder="Surname" maxlength="80" autocomplete="family-name" />
               </div>
             </div>
             <div class="auth-form-group">
               <label for="firm-name">Firm Name (Optional)</label>
-              <input type="text" class="auth-input" id="firm-name" placeholder="Fanele &amp; Partners" />
+              <input type="text" class="auth-input" id="firm-name" placeholder="Fanele &amp; Partners" maxlength="120" autocomplete="organization" />
             </div>
             <div class="auth-form-group">
               <label for="date-of-birth">Date of Birth</label>
-              <input type="date" class="auth-input" id="date-of-birth" />
+              <input type="date" class="auth-input" id="date-of-birth" autocomplete="bday" />
             </div>
           </div>
 
           <div class="auth-form-group">
             <label for="email">Email</label>
-            <input type="email" class="auth-input" id="email" placeholder="name@firm.com" required autocomplete="email" />
+            <input type="email" class="auth-input" id="email" placeholder="name@firm.com" maxlength="255" required autocomplete="email" />
           </div>
 
           <div class="auth-form-group login-only" id="forgot-row">
@@ -59,7 +59,7 @@
           <div class="auth-form-group">
             <label for="password">Password</label>
             <div class="auth-input-wrap">
-              <input type="password" class="auth-input" id="password" placeholder="••••••••" required autocomplete="current-password" />
+              <input type="password" class="auth-input" id="password" placeholder="••••••••" maxlength="128" required autocomplete="current-password" />
               <button type="button" class="password-toggle" id="password-toggle" aria-label="Toggle password visibility">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
