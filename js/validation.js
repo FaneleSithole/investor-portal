@@ -219,6 +219,7 @@ function setFieldError(inputId, message) {
 
   const isCheckbox = input.type === 'checkbox';
   input.classList.toggle(isCheckbox ? 'check-invalid' : 'input-invalid', !!message);
+  input.setAttribute('aria-invalid', message ? 'true' : 'false');
 
   const container = _fieldContainer(input) || input.parentElement;
   if (!container) return;
