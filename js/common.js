@@ -141,6 +141,7 @@ async function requireAuth() {
   }
 
   updateTopbarUser(user);
+  if (typeof initNotifications === 'function') initNotifications(user);
   const firm = document.getElementById('firm-name');
   if (firm && user.firmName) firm.textContent = user.firmName;
 }
@@ -156,6 +157,7 @@ function updateTopbarUser(user) {
 }
 
 async function logout() {
+  if (typeof clearNotificationSession === 'function') clearNotificationSession();
   await fetch(API_BASE + '/auth/sessions/current', { method: 'DELETE', credentials: 'include' });
   window.location.href = 'landing.html';
 }

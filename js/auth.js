@@ -92,7 +92,9 @@ async function handleSubmit(e) {
         body: JSON.stringify({ email, password, firstName, lastName, firmName: firmName || null, dateOfBirth })
       });
       if (!r.ok) throw await parseError(r);
-      showToast('Account created — welcome to Capital Flow');
+      sessionStorage.setItem('cf_fresh_login', '1');
+      sessionStorage.setItem('cf_welcome_signup', '1');
+      showToast('Account created — redirecting to your portal');
       setTimeout(() => { window.location.href = 'index.html'; }, 600);
     } catch (err) {
       const msg = err.message || 'Unable to reach the server. Start the backend on port 8080 and open http://localhost:8080/pages/login.html';
@@ -119,7 +121,9 @@ async function handleSubmit(e) {
       body: JSON.stringify({ email, password })
     });
     if (!r.ok) throw await parseError(r);
-    showToast('Login successful');
+    sessionStorage.setItem('cf_fresh_login', '1');
+    sessionStorage.setItem('cf_welcome_signup', '0');
+    showToast('Authentication successful — opening portal');
     setTimeout(() => { window.location.href = 'index.html'; }, 600);
   } catch (err) {
     const msg = err.message || 'Unable to reach the server. Start the backend on port 8080 and open http://localhost:8080/pages/login.html';
