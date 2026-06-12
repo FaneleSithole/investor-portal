@@ -5,14 +5,18 @@ import com.enviro.assessment.junior.fanelesibongesithole.dto.BalanceDto;
 import com.enviro.assessment.junior.fanelesibongesithole.dto.TransactionDto;
 import com.enviro.assessment.junior.fanelesibongesithole.dto.WithdrawalRequestDto;
 import com.enviro.assessment.junior.fanelesibongesithole.dto.WithdrawalResponseDto;
+import com.enviro.assessment.junior.fanelesibongesithole.entity.LinkedAccountEntity;
+import com.enviro.assessment.junior.fanelesibongesithole.entity.LiquidBalanceEntity;
+import com.enviro.assessment.junior.fanelesibongesithole.entity.WithdrawalEntity;
 import com.enviro.assessment.junior.fanelesibongesithole.exception.ApiException;
-import com.enviro.assessment.junior.fanelesibongesithole.model.LinkedAccount;
-import com.enviro.assessment.junior.fanelesibongesithole.model.Withdrawal;
 import com.enviro.assessment.junior.fanelesibongesithole.model.WithdrawalStatus;
 import com.enviro.assessment.junior.fanelesibongesithole.model.WithdrawalType;
-import com.enviro.assessment.junior.fanelesibongesithole.repository.DataStore;
+import com.enviro.assessment.junior.fanelesibongesithole.repository.LinkedAccountRepository;
+import com.enviro.assessment.junior.fanelesibongesithole.repository.LiquidBalanceRepository;
+import com.enviro.assessment.junior.fanelesibongesithole.repository.WithdrawalRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -24,11 +28,21 @@ import java.util.stream.Stream;
 @Service
 public class WithdrawalService {
 
-    private final DataStore dataStore;
+    private final WithdrawalRepository withdrawalRepository;
+    private final LinkedAccountRepository accountRepository;
+    private final LiquidBalanceRepository liquidBalanceRepository;
+    private final ReferenceCounterService referenceCounterService;
     private final CurrentUserService currentUserService;
 
-    public WithdrawalService(DataStore dataStore, CurrentUserService currentUserService) {
-        this.dataStore = dataStore;
+    public WithdrawalService(WithdrawalRepository withdrawalRepository,
+                             LinkedAccountRepository accountRepository,
+                             LiquidBalanceRepository liquidBalanceRepository,
+                             ReferenceCounterService referenceCounterService,
+                             CurrentUserService currentUserService) {
+        this.withdrawalRepository = withdrawalRepository;
+        this.accountRepository = accountRepository;
+        this.liquidBalanceRepository = liquidBalanceRepository;
+        this.referenceCounterService = referenceCounterService;
         this.currentUserService = currentUserService;
     }
 
@@ -37,32 +51,34 @@ public class WithdrawalService {
         BigDecimal maxWithdrawal = available.multiply(BusinessRules.MAX_WITHDRAWAL_RATIO)
                 .setScale(2, RoundingMode.HALF_UP);
         boolean retirementEligible = currentUserService.requireCurrentUser().getAge() > BusinessRules.RETIREMENT_MIN_AGE;
+        double growthPercent = liquidBalanceRepository.findById(1L)
+                .map(LiquidBalanceEntity::getGrowthPercent)
+                .orElseThrow(() -> new ApiException("Liquid balance not configured", HttpStatus.INTERNAL_SERVER_ERROR));
 
         return new BalanceDto(
                 available.doubleValue(),
                 maxWithdrawal.doubleValue(),
-                2.4,
+                growthPercent,
                 retirementEligible
         );
     }
 
     public List<TransactionDto> getTransactions() {
-        return dataStore.getWithdrawals().stream()
-                .sorted(Comparator.comparing(Withdrawal::getDate).reversed())
+        return withdrawalRepository.findAll().stream()
+                .sorted(Comparator.comparing(WithdrawalEntity::getDate).reversed())
                 .map(this::toTransactionDto)
                 .toList();
     }
 
+    @Transactional
     public WithdrawalResponseDto createWithdrawal(WithdrawalRequestDto request) {
-        LinkedAccount account = dataStore.getAccounts().get(request.accountId());
-        if (account == null) {
-            throw new ApiException("Invalid destination account", HttpStatus.BAD_REQUEST);
-        }
+        LinkedAccountEntity account = accountRepository.findById(request.accountId())
+                .orElseThrow(() -> new ApiException("Invalid destination account", HttpStatus.BAD_REQUEST));
 
         validateWithdrawal(request);
 
-        String referenceId = dataStore.nextReferenceId();
-        Withdrawal withdrawal = new Withdrawal(
+        String referenceId = referenceCounterService.nextWithdrawalReference();
+        WithdrawalEntity withdrawal = new WithdrawalEntity(
                 referenceId,
                 LocalDate.now(),
                 request.amount().setScale(2, RoundingMode.HALF_UP),
@@ -72,13 +88,13 @@ public class WithdrawalService {
                 request.type(),
                 request.reason() != null ? request.reason() : ""
         );
-        dataStore.addWithdrawal(withdrawal);
+        withdrawalRepository.save(withdrawal);
 
         return new WithdrawalResponseDto("Withdrawal request submitted", referenceId);
     }
 
     public String exportStatementsCsv(String status, String type, LocalDate from, LocalDate to) {
-        Stream<Withdrawal> stream = dataStore.getWithdrawals().stream();
+        Stream<WithdrawalEntity> stream = withdrawalRepository.findAll().stream();
 
         if (status != null && !status.isBlank()) {
             WithdrawalStatus filterStatus = parseStatus(status);
@@ -95,13 +111,13 @@ public class WithdrawalService {
             stream = stream.filter(w -> !w.getDate().isAfter(to));
         }
 
-        List<Withdrawal> filtered = stream
-                .sorted(Comparator.comparing(Withdrawal::getDate).reversed())
+        List<WithdrawalEntity> filtered = stream
+                .sorted(Comparator.comparing(WithdrawalEntity::getDate).reversed())
                 .toList();
 
         StringBuilder csv = new StringBuilder();
         csv.append("Reference ID,Date,Amount,Type,Status,Bank,Account Last Four,Reason\n");
-        for (Withdrawal w : filtered) {
+        for (WithdrawalEntity w : filtered) {
             csv.append(w.getReferenceId()).append(',')
                     .append(w.getDate()).append(',')
                     .append(w.getAmount()).append(',')
@@ -141,17 +157,21 @@ public class WithdrawalService {
     }
 
     private BigDecimal calculateAvailableBalance() {
-        BigDecimal pendingTotal = dataStore.getWithdrawals().stream()
+        BigDecimal pendingTotal = withdrawalRepository.findAll().stream()
                 .filter(w -> w.getStatus() == WithdrawalStatus.Pending)
-                .map(Withdrawal::getAmount)
+                .map(WithdrawalEntity::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return dataStore.getLiquidBalance()
+        BigDecimal liquidBalance = liquidBalanceRepository.findById(1L)
+                .map(LiquidBalanceEntity::getBalance)
+                .orElseThrow(() -> new ApiException("Liquid balance not configured", HttpStatus.INTERNAL_SERVER_ERROR));
+
+        return liquidBalance
                 .subtract(pendingTotal)
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
-    private TransactionDto toTransactionDto(Withdrawal w) {
+    private TransactionDto toTransactionDto(WithdrawalEntity w) {
         return new TransactionDto(
                 w.getReferenceId(),
                 w.getDate().toString(),

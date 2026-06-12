@@ -1,24 +1,6 @@
 let selectedFund = null;
 let userFullName = '';
 
-// Offline fallback — must stay in sync with backend FundCatalog
-const AVAILABLE_FUNDS = [
-  { id: 'fund_balanced', name: 'Balanced / Hybrid Funds', horizon: 'Medium-Long Term',
-    description: 'Diversified exposure across equities, bonds, and alternatives with moderate volatility.' },
-  { id: 'fund_target_date', name: 'Target Date Funds', horizon: 'Medium-Long Term',
-    description: 'Age-based allocation that automatically rebalances toward conservative assets over time.' },
-  { id: 'fund_etf', name: 'Exchange-Traded Funds (ETFs)', horizon: 'Medium-Long Term',
-    description: 'Low-cost, liquid market exposure across sectors, indices, and asset classes.' },
-  { id: 'fund_pe', name: 'Private Equity Funds', horizon: 'Long Term',
-    description: 'Institutional access to buyout, growth, and venture strategies.' },
-  { id: 'fund_mm', name: 'Money Market Funds', horizon: 'Short Term',
-    description: 'Short-duration, high-liquidity instruments for capital preservation.' },
-  { id: 'fund_reit', name: 'Real Estate Investment Trusts (REITs)', horizon: 'Medium-Long Term',
-    description: 'Income-focused commercial and residential property portfolios.' },
-  { id: 'fund_esg', name: 'Sustainable & ESG Funds', horizon: 'Medium-Long Term',
-    description: 'Impact-aligned strategies integrating environmental and governance criteria.' }
-];
-
 function setFundingDateMin() {
   const dateInput = document.getElementById('inv-date');
   if (!dateInput) return;
@@ -51,9 +33,12 @@ async function loadInvestmentPage() {
       accounts.map(a => `<option value="${a.id}">${a.bankName} ****${a.lastFour}</option>`).join('');
   }
 
-  const fundList = (funds && !funds.error && funds.length) ? funds : AVAILABLE_FUNDS;
-  if (funds?.error) showToast('Could not load funds from server — showing catalogue', false);
-  renderFunds(fundList);
+  if (funds?.error || !funds?.length) {
+    showToast('Could not load funds from server', false);
+    renderFunds([]);
+    return;
+  }
+  renderFunds(funds);
 
   const amountInput = document.getElementById('inv-amount');
   if (amountInput) {
@@ -89,9 +74,7 @@ async function selectFund(fundId, el) {
   setFundSelectionError('');
 
   const fund = await apiFetch(`/investments/funds/${fundId}`);
-  selectedFund = fund?.error
-    ? AVAILABLE_FUNDS.find(f => f.id === fundId)
-    : fund;
+  selectedFund = fund?.error ? null : fund;
 
   if (!selectedFund) {
     setFundSelectionError('Fund not found');

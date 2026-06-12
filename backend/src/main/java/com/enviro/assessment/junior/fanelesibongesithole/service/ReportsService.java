@@ -1,7 +1,9 @@
 package com.enviro.assessment.junior.fanelesibongesithole.service;
 
 import com.enviro.assessment.junior.fanelesibongesithole.dto.ReportDto;
+import com.enviro.assessment.junior.fanelesibongesithole.entity.ReportEntity;
 import com.enviro.assessment.junior.fanelesibongesithole.exception.ApiException;
+import com.enviro.assessment.junior.fanelesibongesithole.repository.ReportRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -10,26 +12,32 @@ import java.util.List;
 @Service
 public class ReportsService {
 
-    private static final List<ReportDto> REPORTS = List.of(
-            new ReportDto("rpt_001", "Q4 2023 Consolidated Statement",
-                    "Comprehensive overview of portfolio performance ending Dec 31, 2023.",
-                    "STATEMENT", "2024-01-15", 2_516_582L),
-            new ReportDto("rpt_002", "2023 Schedule K-1",
-                    "Partner's share of income, deductions, credits, etc. for tax year 2023.",
-                    "TAX_DOC", "2024-03-01", 1_153_434L),
-            new ReportDto("rpt_003", "Annual Performance Review",
-                    "Deep dive into sector allocations and yield comparisons.",
-                    "ANALYSIS", "2024-01-20", 6_082_150L)
-    );
+    private final ReportRepository reportRepository;
+
+    public ReportsService(ReportRepository reportRepository) {
+        this.reportRepository = reportRepository;
+    }
 
     public List<ReportDto> listReports() {
-        return REPORTS;
+        return reportRepository.findAll().stream()
+                .map(this::toDto)
+                .toList();
     }
 
     public ReportDto getReport(String id) {
-        return REPORTS.stream()
-                .filter(r -> r.id().equals(id))
-                .findFirst()
+        return reportRepository.findById(id)
+                .map(this::toDto)
                 .orElseThrow(() -> new ApiException("Report not found", HttpStatus.NOT_FOUND));
+    }
+
+    private ReportDto toDto(ReportEntity entity) {
+        return new ReportDto(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getDescription(),
+                entity.getType(),
+                entity.getGeneratedDate().toString(),
+                entity.getFileSizeBytes()
+        );
     }
 }

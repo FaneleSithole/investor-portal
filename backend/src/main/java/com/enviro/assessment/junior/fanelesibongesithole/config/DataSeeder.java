@@ -2,7 +2,8 @@ package com.enviro.assessment.junior.fanelesibongesithole.config;
 
 import com.enviro.assessment.junior.fanelesibongesithole.entity.UserEntity;
 import com.enviro.assessment.junior.fanelesibongesithole.repository.UserRepository;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -10,8 +11,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 
 @Component
-@Order(2)
-public class DataSeeder implements CommandLineRunner {
+public class DataSeeder {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -21,8 +21,9 @@ public class DataSeeder implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public void run(String... args) {
+    @EventListener(ApplicationReadyEvent.class)
+    @Order(2)
+    public void seedUserData() {
         userRepository.findByEmailIgnoreCase("thabo@fanele.com").ifPresentOrElse(user -> {
             if (user.getPhone() == null || user.getPhone().isBlank()) {
                 user.setPhone("+27 (11) 555-0142");

@@ -6,8 +6,13 @@ import com.enviro.assessment.junior.fanelesibongesithole.dto.ChartPointDto;
 import com.enviro.assessment.junior.fanelesibongesithole.dto.PerformanceDto;
 import com.enviro.assessment.junior.fanelesibongesithole.dto.PortfolioSummaryDto;
 import com.enviro.assessment.junior.fanelesibongesithole.dto.ProductDto;
-import com.enviro.assessment.junior.fanelesibongesithole.model.Product;
-import com.enviro.assessment.junior.fanelesibongesithole.repository.DataStore;
+import com.enviro.assessment.junior.fanelesibongesithole.entity.PortfolioHoldingEntity;
+import com.enviro.assessment.junior.fanelesibongesithole.exception.ApiException;
+import com.enviro.assessment.junior.fanelesibongesithole.repository.PortfolioActivityRepository;
+import com.enviro.assessment.junior.fanelesibongesithole.repository.PortfolioChartPointRepository;
+import com.enviro.assessment.junior.fanelesibongesithole.repository.PortfolioHoldingRepository;
+import com.enviro.assessment.junior.fanelesibongesithole.repository.PortfolioMetricsRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,76 +24,78 @@ import java.util.Map;
 @Service
 public class PortfolioService {
 
-    private final DataStore dataStore;
+    private final PortfolioHoldingRepository holdingRepository;
+    private final PortfolioChartPointRepository chartPointRepository;
+    private final PortfolioActivityRepository activityRepository;
+    private final PortfolioMetricsRepository metricsRepository;
 
-    public PortfolioService(DataStore dataStore) {
-        this.dataStore = dataStore;
+    public PortfolioService(PortfolioHoldingRepository holdingRepository,
+                            PortfolioChartPointRepository chartPointRepository,
+                            PortfolioActivityRepository activityRepository,
+                            PortfolioMetricsRepository metricsRepository) {
+        this.holdingRepository = holdingRepository;
+        this.chartPointRepository = chartPointRepository;
+        this.activityRepository = activityRepository;
+        this.metricsRepository = metricsRepository;
     }
 
     public PortfolioSummaryDto getSummary() {
-        List<Product> products = dataStore.getProducts();
+        List<PortfolioHoldingEntity> holdings = holdingRepository.findAll();
 
-        long totalValue = products.stream()
-                .mapToLong(p -> p.getCurrentValue().longValue())
+        long totalValue = holdings.stream()
+                .mapToLong(h -> h.getCurrentValue().longValue())
                 .sum();
 
-        List<ProductDto> productDtos = products.stream()
+        List<ProductDto> productDtos = holdings.stream()
                 .map(this::toProductDto)
                 .toList();
 
-        List<PerformanceDto> performance = products.stream()
-                .map(p -> new PerformanceDto(
-                        p.getName(),
-                        p.getCommitted().longValue(),
-                        p.getInvested().longValue(),
-                        p.getIrr()))
+        List<PerformanceDto> performance = holdings.stream()
+                .map(h -> new PerformanceDto(
+                        h.getFund().getName(),
+                        h.getCommitted().longValue(),
+                        h.getInvested().longValue(),
+                        h.getIrr()))
                 .toList();
+
+        double growthPercent = metricsRepository.findById(1L)
+                .map(m -> m.getGrowthPercent())
+                .orElseThrow(() -> new ApiException("Portfolio metrics not configured", HttpStatus.INTERNAL_SERVER_ERROR));
 
         return new PortfolioSummaryDto(
                 totalValue,
-                12.4,
-                products.size(),
+                growthPercent,
+                holdings.size(),
                 chartData(),
-                allocations(products, totalValue),
+                allocations(holdings, totalValue),
                 performance,
                 recentActivity(),
                 productDtos
         );
     }
 
-    private ProductDto toProductDto(Product p) {
+    private ProductDto toProductDto(PortfolioHoldingEntity h) {
         return new ProductDto(
-                p.getId(),
-                p.getName(),
-                p.getAssetClass(),
-                p.getCommitted().longValue(),
-                p.getInvested().longValue(),
-                p.getCurrentValue().longValue(),
-                p.getIrr()
+                h.getFund().getId(),
+                h.getFund().getName(),
+                h.getFund().getAssetClass(),
+                h.getCommitted().longValue(),
+                h.getInvested().longValue(),
+                h.getCurrentValue().longValue(),
+                h.getIrr()
         );
     }
 
     private List<ChartPointDto> chartData() {
-        return List.of(
-                new ChartPointDto("Jan", 210_000_000L),
-                new ChartPointDto("Feb", 218_000_000L),
-                new ChartPointDto("Mar", 222_000_000L),
-                new ChartPointDto("Apr", 228_000_000L),
-                new ChartPointDto("May", 231_000_000L),
-                new ChartPointDto("Jun", 235_000_000L),
-                new ChartPointDto("Jul", 238_000_000L),
-                new ChartPointDto("Aug", 241_000_000L),
-                new ChartPointDto("Sep", 244_000_000L),
-                new ChartPointDto("Oct", 246_500_000L),
-                new ChartPointDto("Nov", 247_800_000L),
-                new ChartPointDto("Dec", 248_500_000L)
-        );
+        return chartPointRepository.findAllByOrderBySortOrderAsc().stream()
+                .map(p -> new ChartPointDto(p.getMonthLabel(), p.getChartValue()))
+                .toList();
     }
 
-    private List<AllocationDto> allocations(List<Product> products, long totalValue) {
+    private List<AllocationDto> allocations(List<PortfolioHoldingEntity> holdings, long totalValue) {
         Map<String, Long> byClass = new LinkedHashMap<>();
-        for (Product p : products) {
-            byClass.merge(p.getAssetClass(), p.getCurrentValue().longValue(), Long::sum);
+        for (PortfolioHoldingEntity h : holdings) {
+            byClass.merge(h.getFund().getAssetClass(), h.getCurrentValue().longValue(), Long::sum);
         }
         return byClass.entrySet().stream()
                 .map(e -> new AllocationDto(
@@ -100,10 +107,12 @@ public class PortfolioService {
     }
 
     private List<ActivityDto> recentActivity() {
-        return List.of(
-                new ActivityDto("Capital Call", "Private Equity Funds", "2023-10-24", -2_500_000),
-                new ActivityDto("Distribution", "Balanced / Hybrid Funds", "2023-10-18", 850_000),
-                new ActivityDto("Document Ready", "Real Estate Investment Trusts (REITs)", "2023-10-15", 0)
-        );
+        return activityRepository.findAllByOrderBySortOrderAsc().stream()
+                .map(a -> new ActivityDto(
+                        a.getActivityType(),
+                        a.getFundName(),
+                        a.getActivityDate().toString(),
+                        a.getAmount()))
+                .toList();
     }
 }
